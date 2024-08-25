@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      charset="UTF-8"
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <canvas
+      id="myCanvas"
+      width="500"
+      height="300"
+      style="border: 1px solid #d3d3d3"
+    >
+      Your browser does not support the HTML5 canvas tag.</canvas
+    >
+  </head>
+  <body onload="startGame()">
+    <p>Przewieź kompanów przez rzekę</p>
+    <script>
+      var kupiec;
+      var koza;
+      var kapusta;
+      var wilk;
+      var text;
+      var string;
+      var stan;
+
+      function startGame() {
+        kupiec = 0;
+        koza = 0;
+        kapusta = 0;
+        wilk = 0;
+        stan = 0;
+        rysuj(0);
+        Show(".Koza");
+        Show(".Kapusta");
+        Show(".Wilk");
+        Show(".Kupiec");
+      }
+
+      function clear() {
+        var canvasTemp = document.getElementById("myCanvas");
+        var ctxTemp = canvasTemp.getContext("2d");
+        ctxTemp.clearRect(0, 0, 500, 300);
+      }
+
+      function rysuj(n) {
+        clear();
+        var canvas = document.getElementById("myCanvas");
+        if (canvas.getContext) {
+          var ctx = canvas.getContext("2d");
+          ctx.strokeStyle = "green";
+          ctx.font = "14pt Calibri";
+          ctx.strokeStyle = "black";
+          ctx.fillStyle = "black";
+
+          //rysowanie rzeki
+          ctx.strokeStyle = "blue";
+          ctx.fillStyle = "blue";
+          ctx.fillRect(200, 50, 100, 250);
+          ctx.stroke();
+
+          //zmiany statusów
+          if (n == 1) {
+            //koza
+            koza = (koza + 1) % 2;
+            kupiec = (kupiec + 1) % 2;
+            stan = (stan + 1) % 2;
+          }
+
+          if (n == 2) {
+            //kapusta
+            kapusta = (kapusta + 1) % 2;
+            kupiec = (kupiec + 1) % 2;
+            stan = (stan + 1) % 2;
+          }
+
+          if (n == 3) {
+            //wilk
+            wilk = (wilk + 1) % 2;
+            kupiec = (kupiec + 1) % 2;
+            stan = (stan + 1) % 2;
+          }
+
+          if (n == 4) {
+            //sam kupiec
+            kupiec = (kupiec + 1) % 2;
+            stan = (stan + 1) % 2;
+          }
+
+          //ukrywanie przycisków
+          if (koza == stan) {
+            Show(".Koza");
+          } else {
+            Hide(".Koza");
+          }
+
+          if (kapusta == stan) {
+            Show(".Kapusta");
+          } else {
+            Hide(".Kapusta");
+          }
+
+          if (wilk == stan) {
+            Show(".Wilk");
+          } else {
+            Hide(".Wilk");
+          }
+
+          //rysowanie postaci
+          ctx.font = "14pt Calibri";
+          ctx.strokeStyle = "black";
+          ctx.fillStyle = "black";
+
+          string = "Talib";
+          if (kupiec == 0) {
+            ctx.fillText(string, 30, 100);
+          } else {
+            ctx.fillText(string, 330, 100);
+          }
+
+          string = "Sarna";
+          if (koza == 0) {
+            ctx.fillText(string, 30, 140);
+          } else {
+            ctx.fillText(string, 330, 140);
+          }
+
+          string = "Watermelon";
+          if (kapusta == 0) {
+            ctx.fillText(string, 30, 180);
+          } else {
+            ctx.fillText(string, 330, 180);
+          }
+
+          string = "Wilk";
+          if (wilk == 0) {
+            ctx.fillText(string, 30, 220);
+          } else {
+            ctx.fillText(string, 330, 220);
+          }
+
+          var text = "";
+          if (koza == 1 && wilk == 1 && kupiec == 1 && kapusta == 1) {
+            text =
+              "Wygrałeś! Gratulacje! Wszyscy wrócili cali i zdrowi:) Teraz wbij na maila";
+            Hide(".Koza");
+            Hide(".Kapusta");
+            Hide(".Wilk");
+            Hide(".Kupiec");
+          } else {
+            if (
+              (koza == wilk && wilk != kupiec) ||
+              (koza == kapusta && koza != kupiec)
+            ) {
+              if (koza == wilk) {
+                text = "Przegrałeś! Wilk zjadł Sarnę :( Spróbuj jeszcze raz";
+              } else {
+                text =
+                  "Przegrałeś! Sarna zjadła Watermelona :( Spróbuj jeszcze raz";
+              }
+              Hide(".Koza");
+              Hide(".Kapusta");
+              Hide(".Wilk");
+              Hide(".Kupiec");
+            }
+          }
+
+          ctx.fillText(text, 10, 30);
+        }
+      }
+
+      function Show(klasa) {
+        var elemArray = document.querySelectorAll(klasa);
+        for (var i = 0; i < elemArray.length; i++) {
+          var elem = elemArray[i];
+          var elemStyleDisplay = elem.style.display;
+          if (elemStyleDisplay === "none") {
+            elem.style.display = "block";
+          } else {
+            //elem.style.display = 'none';
+          }
+        }
+      }
+
+      function Hide(klasa) {
+        var elemArray = document.querySelectorAll(klasa);
+        for (var i = 0; i < elemArray.length; i++) {
+          var elem = elemArray[i];
+          var elemStyleDisplay = elem.style.display;
+          if (elemStyleDisplay === "none") {
+            //elem.style.display = 'block';
+          } else {
+            elem.style.display = "none";
+          }
+        }
+      }
+    </script>
+    <br />
+    <div class="Koza">
+      <button onclick="rysuj(1)">TALIB przewozi SARNĘ</button>
+    </div>
+    <div class="Kapusta">
+      <button onclick="rysuj(2)">TALIB przewozi WATERMELONA</button>
+    </div>
+    <div class="Wilk">
+      <button onclick="rysuj(3)">TALIB przewozi WILKA</button>
+    </div>
+    <div class="Kupiec">
+      <button onclick="rysuj(4)">PŁYNIE SAM smutny TALIB</button>
+    </div>
+
+    <br />
+    <button onclick="startGame()">NOWA GRA</button>
+
+    <p>
+      Pewien Talib ma tajską ekipę: Wilka, Sarnę i Watermelona. Musi się on z
+      nimi przeprawić przez rzekę i ma do dyspozycji jeden skuter, do którego
+      może wejść w jednym momencie tylko on sam i jeden z kompanów (co by się
+      nie pozjadali). Wiadomo, że Sarna zje Watermelona, a Wilk Sarnę, gdy tylko
+      któraś z tych par zostanie bez opieki. W jaki sposób Talib ma pokonać
+      rzekę nie tracąc przy tym żadnego z kompaów? Przeprawa jest ze strony
+      europejskiej na azjatycką, więc nie można jeździć skuterem w więcej niż
+      dwa osobniki :)
+    </p>
+  </body>
+</html>
